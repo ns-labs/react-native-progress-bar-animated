@@ -26,10 +26,18 @@ class ProgressBar extends React.Component {
     }
   }
 
-  componentWillReceiveProps(props) {
-    if (props.value !== this.state.progress) {
-      if (props.value >= 0 && props.value <= this.props.maxValue) {
-        this.setState({ progress: props.value }, () => {
+  componentDidUpdate(prevProps) {
+    if (this.props.value !== prevProps.value) {
+      this.animateWidth();
+      if (this.props.backgroundColorOnComplete) {
+        if (this.props.value === this.props.maxValue) {
+          this.animateBackground();
+        }
+      }
+    }
+    if (prevProps.value !== this.state.progress) {
+      if (prevProps.value >= 0 && prevProps.value <= this.props.maxValue) {
+        this.setState({ progress: prevProps.value }, () => {
           if (this.state.progress === this.props.maxValue) {
             // Callback after complete the progress
             const callback = this.props.onComplete;
@@ -38,18 +46,6 @@ class ProgressBar extends React.Component {
             }
           }
         });
-      }
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.value !== prevProps.value) {
-      this.animateWidth();
-
-      if (this.props.backgroundColorOnComplete) {
-        if (this.props.value === this.props.maxValue) {
-          this.animateBackground();
-        }
       }
     }
   }
